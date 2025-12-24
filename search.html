@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Busca artículos en Raíces de la Fantasía: mitología, historia, filosofía, arte y más.">
+  <title>Buscador | Raíces de la Fantasía</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .search-container {
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+    }
+    #search-input {
+      width: 100%;
+      padding: 0.8rem;
+      font-size: 1.1rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      box-sizing: border-box;
+      margin-bottom: 2rem;
+    }
+    .results-list {
+      list-style: none;
+      padding: 0;
+    }
+    .result-item {
+      margin-bottom: 1.5rem;
+      padding-bottom: 1.2rem;
+      border-bottom: 1px solid #eee;
+    }
+    .result-link {
+      text-decoration: none;
+      color: inherit;
+    }
+    .result-link h2 {
+      margin: 0 0 0.4rem;
+      font-size: 1.3rem;
+      color: #2c3e50;
+    }
+    .result-link h2:hover {
+      color: #e74c3c;
+    }
+    .result-description {
+      margin: 0;
+      color: #555;
+      line-height: 1.5;
+    }
+    .no-results {
+      text-align: center;
+      padding: 2rem;
+      color: #777;
+      font-style: italic;
+    }
+    .back-home {
+      display: inline-block;
+      margin-top: 1rem;
+      color: #3498db;
+      text-decoration: none;
+    }
+    .back-home:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="site-header">
+    <a href="./">
+      <img src="img/logo-raices-fantasia.png" alt="Raíces de la Fantasía">
+    </a>
+    <div class="search-prompt">
+      <span>¿Buscas algo en específico?</span>
+      <a href="search.html">🔍 Ir al buscador</a>
+    </div>
+  </div>
+
+  <header>
+    <h1>🔍 Buscador</h1>
+    <p>Escribe palabras clave (ej: "mito", "guerra", "Tolkien", "arte")</p>
+  </header>
+
+  <div class="search-container">
+    <input type="text" id="search-input" placeholder="Busca en los 213 artículos..." autocomplete="off" autofocus>
+
+    <ul class="results-list" id="results-list">
+      <!-- Los resultados se insertarán aquí -->
+    </ul>
+
+    <a href="./" class="back-home">← Volver a Raíces de la Fantasía</a>
+  </div>
+
+  <script>
+    // Cargar search.json y mostrar resultados
+    fetch('search.json')
+      .then(response => {
+        if (!response.ok) throw new Error('No se pudo cargar search.json');
+        return response.json();
+      })
+      .then(data => {
+        const resultsList = document.getElementById('results-list');
+        const searchInput = document.getElementById('search-input');
+
+        function renderResults(items) {
+          resultsList.innerHTML = '';
+          if (items.length === 0) {
+            resultsList.innerHTML = '<li class="no-results">No se encontraron resultados.</li>';
+            return;
+          }
+          items.forEach(item => {
+            const li = document.createElement('li');
+            li.className = 'result-item';
+            // ✅ Rutas relativas: item.url debe empezar con nombre de carpeta (ej: "mitologia/...")
+            li.innerHTML = `
+              <a class="result-link" href="${item.url}">
+                <h2>${item.title}</h2>
+                <p class="result-description">${item.description}</p>
+              </a>
+            `;
+            resultsList.appendChild(li);
+          });
+        }
+
+        // Mostrar todos al inicio
+        renderResults(data);
+
+        // Búsqueda en tiempo real
+        searchInput.addEventListener('input', () => {
+          const term = searchInput.value.trim().toLowerCase();
+          if (!term) {
+            renderResults(data);
+            return;
+          }
+          const filtered = data.filter(entry =>
+            entry.title.toLowerCase().includes(term) ||
+            entry.description.toLowerCase().includes(term)
+          );
+          renderResults(filtered);
+        });
+      })
+      .catch(err => {
+        console.error('Error:', err);
+        document.getElementById('results-list').innerHTML =
+          '<li class="no-results">Error al cargar el índice de búsqueda. ¿Existe search.json?</li>';
+      });
+  </script>
+
+</body>
+</html>
