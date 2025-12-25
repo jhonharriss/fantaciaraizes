@@ -159,3 +159,55 @@ footer a:hover {
     font-size: 1rem;
   }
 }
+/* Estilos para artículos individuales */
+.content {
+  max-width: 800px;
+  margin: 0 auto 3rem;
+  padding: 0 1.5rem;
+  line-height: 1.8;
+  font-size: 1.05rem;
+}
+
+.content h2 {
+  margin: 2rem 0 1rem;
+  color: var(--color-primary);
+  font-size: 1.5rem;
+}
+
+.content p {
+  margin-bottom: 1.2rem;
+}
+
+.content ul {
+  margin: 1.2rem 0 1.8rem 1.5rem;
+  padding-left: 0;
+  list-style: none;
+}
+
+.content ul li {
+  margin-bottom: 0.6rem;
+  position: relative;
+  padding-left: 1.2rem;
+}
+
+.content ul li:before {
+  content: "•";
+  color: var(--color-accent);
+  position: absolute;
+  left: 0;
+  font-weight: bold;
+}
+
+.highlight {
+  background-color: #fff9db;
+  padding: 0 0.2rem;
+  border-radius: 2px;
+}
+
+.comment-note {
+  text-align: center;
+  padding: 0 1.5rem 3rem;
+  color: #777;
+  font-style: italic;
+  font-size: 0.95rem;
+}
